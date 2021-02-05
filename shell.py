@@ -25,8 +25,9 @@ class CommandWithArg(Command):
     def func(self):
         pass
 
-class currpath(Command):
-    name = "currpath"
+class check(Command):
+    name = "check"
+    directory = ""
 
     def __init__(self, argument):
         super().__init__(argument)
@@ -34,18 +35,38 @@ class currpath(Command):
     
     def func(self):
         print(os.getcwd())
+        self.directory = os.getcwd()
 
-class cd(CommandWithArg):
-    name = "cd"
+class shift(CommandWithArg):
+    name = "shift"
     def __init__(self, argument):
         super().__init__(argument)
 
     def func(self):
         os.chdir(f"{self.argument}/")
-        currpath(None)
+        check(None)
+
+class boop(CommandWithArg):
+    name = 'boop'
+    def __init__(self, argument):
+        super().__init__(argument)
+
+    def func(self):
+        with open(f"{self.argument}", 'w') as file:
+            file.close()
+            print(f"Created filename {self.argument}")
+        
+class boopdir(CommandWithArg):
+    name = "boopdir"
+    def __init__(self, argument):
+        super().__init__(argument)
+    
+    def func(self):
+        self.check = check(None)
+        os.mkdir(self.check.directory + f"\{self.argument}")
 
 class Shell:
-    command_list = [cd, currpath]
+    command_list = [shift, check, boop, boopdir]
     def __init__(self):
         while True:
             command = input("taco> ")
